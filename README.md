@@ -20,4 +20,5 @@ AUTHORS
 
 LINKS
 ===============
+* https://github.com/OS2World/DEV-SAMPLES-IBM_Dev_Toolkit_Samples/tree/master/samples/pm/BMPSAMP
 * https://github.com/OS2World/DEV-SAMPLES-IBM_OS2_2-0_Toolkit
