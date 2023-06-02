@@ -25,8 +25,8 @@ misc.obj : misc.c globals.h jigsaw.h jighelp.h
 procs.obj : procs.c globals.h jigsaw.h jighelp.h
 	gcc -Wall -Zomf -c -O2 procs.c -o procs.obj
 
-jigsaw.res : jigsaw.rc  jigsaw.ico
-	wrc -r jigsaw.rc
+jigsaw.res: jigsaw.rc jigsaw.h jigsaw.ico jighelp.rc jigsaw.dlg
+	wrc -r jigsaw.rc jighelp.rc
 
 jigsaw.hlp: jigsaw.ipf
 	wipfc -l en_US jigsaw.ipf
