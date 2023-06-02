@@ -108,7 +108,7 @@ BITMAPINFOHEADER2  bmp2BitmapSave;
 PBITMAPINFOHEADER2 pbmp2BitmapSave    = &bmp2BitmapSave;
 
 DEVOPENSTRUC dop = { NULL
-                     , "DISPLAY"
+                     , (unsigned char *) "DISPLAY"
                      , NULL
                      , NULL
                      , NULL
@@ -134,9 +134,9 @@ HEV     hevMouse;        /* event semaphore - enable/disable mouse tracking   */
 HEV     hevLoadingBitmap;/* event semaphore - loading a bitmap file from disk */
 HEV     hevKillDraw;     /* event semaphore - stop drawing                    */
 
-PSZ     pszBlankMsg    = "";
+PSZ     pszBlankMsg    = (PSZ) "";
 
-SWCNTRL swctl       = { 0, 0, 0, 0, 0, SWL_VISIBLE, SWL_JUMPABLE, 0, 0 };
+SWCNTRL swctl       = { 0, 0, 0, 0, 0, SWL_VISIBLE, SWL_JUMPABLE, {0, 0} };
 HSWITCH hsw;                           /* handle to a switch list entry       */
 char    szTitle[MESSAGELEN];           /* Title bar text                      */
 char    szErrorTitle[MESSAGELEN];      /* error Title bar text                */

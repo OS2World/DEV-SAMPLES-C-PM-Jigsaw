@@ -275,7 +275,7 @@ typedef PSEGLIST *PPSEGLIST;   /* ppsl */
  *   External prototypes
  */
 
-#pragma linkage (DosGetThreadInfo, system)
+// #pragma linkage (DosGetThreadInfo, system)
 APIRET DosGetThreadInfo(PTIB *pptib,PPIB *pppib);
 
 /*
@@ -307,7 +307,7 @@ extern  VOID  Jumble( VOID);
 extern  VOID  LeftDown( MPARAM mp);
 extern  VOID  LeftUp( VOID);
 extern  VOID  Load( PLOADINFO pli);
-extern  VOID  main( VOID);
+extern  INT  main( VOID);
 extern  VOID  MarkIsland( PSEGLIST pslMark, BOOL fMark);
 extern  ULONG MessageBox(HWND hwndOwner, ULONG idMsg, ULONG fsStyle, BOOL fBeep);
 extern  VOID  MouseMove( MPARAM mp);

@@ -50,7 +50,7 @@ PHPS phps;
   HDC      hdc;
   HPS      hps;
 
-  hdc = DevOpenDC( habMain, OD_MEMORY, "*", 3L, (PDEVOPENDATA)&dop, NULLHANDLE);
+  hdc = DevOpenDC( habMain, OD_MEMORY, (PCSZ) "*", 3L, (PDEVOPENDATA)&dop, NULLHANDLE);
   if( !hdc)
     return( FALSE);
 

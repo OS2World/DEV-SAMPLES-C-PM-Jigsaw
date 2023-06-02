@@ -91,7 +91,7 @@ below&colon.
 .*   HELP FOR OPEN FILENAME
 .************************************************
 .*
-:h1 id=OPEN_OPEN_FILENAME hide nosearch.Help for Open Filename
+:h1 res=20811 id=OPEN_OPEN_FILENAME hide nosearch.Help for Open Filename
 :p.
 Type the name of the file you want to open in the :hp2.Open
 filename:ehp2. field and select the :hp2.Open:ehp2. pushbutton.
@@ -100,7 +100,7 @@ filename:ehp2. field and select the :hp2.Open:ehp2. pushbutton.
 .*   HELP FOR TYPE OF FILE
 .************************************************
 .*
-:h1 id=OPEN_TYPE_OF_FILE hide nosearch.Help for Type of File
+:h1 res=20812 id=OPEN_TYPE_OF_FILE hide nosearch.Help for Type of File
 :p.
 Select the down arrow to the right of the :hp2.Type of file:ehp2.
 field to display the available file types.
@@ -109,7 +109,7 @@ field to display the available file types.
 .*   HELP FOR DRIVE
 .************************************************
 .*
-:h1 id=OPEN_DRIVE hide nosearch.Help for Drive
+:h1 res=20813 id=OPEN_DRIVE hide nosearch.Help for Drive
 :p.
 The :hp2.Drive:ehp2. list displays the drives on your system.  Select
 the drive that contains the files you want to view.
@@ -118,7 +118,7 @@ the drive that contains the files you want to view.
 .*   HELP FOR FILE
 .************************************************
 .*
-:h1 id=OPEN_FILE hide nosearch.Help for File
+:h1 res=20814 id=OPEN_FILE hide nosearch.Help for File
 :p.
 The :hp2.File:ehp2. list displays all the files in the directory you
 selected from the :hp2.Directory:ehp2. list.  Select the file you want
@@ -128,7 +128,7 @@ to open.
 .* Help for DIRECTORY - File, New, Dialog
 .************************************************
 .*
-:h1 id=OPEN_DIRECTORY hide nosearch.Help for Directory
+:h1 res=20815 id=OPEN_DIRECTORY hide nosearch.Help for Directory
 :p.
 The :hp2.Directory:ehp2. list displays the directories on the selected
 drive.  Select a directory to display the list of files from that
@@ -138,7 +138,7 @@ directory in the :hp2.File:ehp2. list box.
 .*   HELP FOR OPEN
 .************************************************
 .*
-:h1 id=OPEN_OPEN hide nosearch.Help for Open
+:h1 res=20816 id=OPEN_OPEN hide nosearch.Help for Open
 :p.
 Select :hp2.Open:ehp2. to accept all information in the window,
 display the puzzle and remove the window from the
@@ -148,7 +148,7 @@ screen.
 .*   HELP FOR CANCEL
 .************************************************
 .*
-:h1 id=OPEN_CANCEL hide nosearch.Help for Cancel
+:h1 res=20817 id=OPEN_CANCEL hide nosearch.Help for Cancel
 :p.
 Select :hp2.Cancel:ehp2. to remove the window from the screen without
 saving any changes.
@@ -156,7 +156,7 @@ saving any changes.
 .************************************************
 .*   GENERAL HELP
 .************************************************
-:h1 res=20815.Help for Jigsaw
+:h1 res=20819.Help for Jigsaw
 :p.
 Use :hp2.Jigsaw:ehp2. to play a fun video puzzle.
 :p.
@@ -169,7 +169,7 @@ Related Information&colon.
 .**********************************
 .*   OBJECT OF THE GAME
 .*
-:h2 id=OBJECT_OF_THE_GAME.Object of the Game
+:h2 res=20820 id=OBJECT_OF_THE_GAME.Object of the Game
 :i1.object of the game
 :p.
 The object of Jigsaw is to scramble and put together a puzzle.  You can
@@ -177,7 +177,7 @@ select from a list of puzzles or use one of your own.
 .**********************************
 .*   PLAYING THE GAME
 .*
-:h2 id=PLAYING_THE_GAME.Playing the Game
+:h2 res=20821 id=PLAYING_THE_GAME.Playing the Game
 :i1.playing the game
 :p.
 To open a puzzle&colon.
@@ -219,7 +219,7 @@ To change the size of the puzzle pieces&colon.
 .**********************************
 .*   HELPFUL HINTS
 .*
-:h2 id=HELPFUL_HINTS.Helpful Hints
+:h2 res=20823 id=HELPFUL_HINTS.Helpful Hints
 :i1.helpful hints
 :p.
 :ul compact.

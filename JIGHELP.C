@@ -200,7 +200,7 @@ MPARAM mp2;   /* second parameter of WM_COMMAND message */
     /* This routine currently doesn't use the mp2 parameter but       *\
      *  it is referenced here to prevent an 'Unreferenced Parameter'
     \*   warning at compile time.                  */
-    mp2;
+    // mp2;
 
 }   /* HelpHelpForHelp() */
 
@@ -322,7 +322,7 @@ MPARAM mp2;   /* second parameter of WM_COMMAND message */
     /* This routine currently doesn't use the mp2 parameter but       *\
      *  it is referenced here to prevent an 'Unreferenced Parameter'
     \*   warning at compile time.                  */
-    mp2;
+    // mp2;
 
 }   /* HelpIndex() */
 
@@ -359,7 +359,7 @@ MPARAM mp2;   /* second parameter of WM_COMMAND message */
     /* This routine currently doesn't use the mp2 parameter but       *\
      *  it is referenced here to prevent an 'Unreferenced Parameter'
     \*   warning at compile time.                  */
-    mp2;
+    // mp2;
 
 }   /* HelpTutorial() */
 
@@ -394,7 +394,7 @@ MPARAM mp2;   /* second parameter of WM_COMMAND message */
     /* This routine currently doesn't use the mp2 parameter but       *\
      *  it is referenced here to prevent an 'Unreferenced Parameter'
     \*   warning at compile time.                  */
-    mp2;
+    // mp2;
 
 }   /* HelpAbout() */
 
@@ -514,15 +514,16 @@ MRESULT EXPENTRY AboutBoxDlgProc(HWND hwnd, ULONG msg,MPARAM mp1,MPARAM mp2)
 VOID ShowDlgHelp(hwnd)
 HWND hwnd;   /* handle of list box window */
 {
-    SHORT idDlg, idItem;
-    HWND  hwndFocus;
+    // SHORT idDlg; 
+    // SHORT idItem;
+    // HWND  hwndFocus;
 
     /* get the id of the dialog box */
-    idDlg = WinQueryWindowUShort(hwnd, QWS_ID);
+    // idDlg = WinQueryWindowUShort(hwnd, QWS_ID);
 
     /* finds which window has the focus and gets its id */
-    hwndFocus = WinQueryFocus(HWND_DESKTOP);
-    idItem = WinQueryWindowUShort(hwndFocus, QWS_ID);
+    // hwndFocus = WinQueryFocus(HWND_DESKTOP);
+    // idItem = WinQueryWindowUShort(hwndFocus, QWS_ID);
 
 
 }   /* ShowDlgHelp() */

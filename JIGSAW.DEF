@@ -1,5 +1,6 @@
-NAME    jigsaw WINDOWAPI LONGNAMES
-BASE=0X10000
-DESCRIPTION 'Jigsaw Graphics Sample'
-HEAPSIZE  5120
-STACKSIZE 8192
+;-------------------------------------
+; JIGSAW.DEF module definition file
+;-------------------------------------
+NAME    JIGSAW WINDOWAPI LONGNAMES
+
+DESCRIPTION     '@#OS2World:1.01#@##1## 02 Jun 2023 20:00:00     ARCAOS-507::::::v1.01@@Jigsaw Graphics Sample'

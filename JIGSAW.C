@@ -134,7 +134,7 @@
 *
 ******************************************************************************/
 
-VOID main(VOID)
+int main (void)
 {
   QMSG  qmsg;
 
@@ -197,8 +197,8 @@ BOOL Initialize(VOID)
    if( !hmqMain)
        return( FALSE);
 
-   WinLoadString( habMain, 0, IDS_TITLEBAR, sizeof(szTitle), szTitle);
-   WinLoadString( habMain, 0, IDS_ERROR_TITLE, sizeof(szErrorTitle), szErrorTitle);
+   WinLoadString( habMain, 0, IDS_TITLEBAR, sizeof(szTitle), (PSZ) szTitle);
+   WinLoadString( habMain, 0, IDS_ERROR_TITLE, sizeof(szErrorTitle), (PSZ) szErrorTitle);
    if( !WinRegisterClass( habMain
                         , (PCH)szTitle
                         , ClientWndProc
@@ -213,8 +213,8 @@ BOOL Initialize(VOID)
       HWND_DESKTOP,                       /* handle of the parent window     */
       WS_VISIBLE,                         /* frame-window style              */
       &flCreate,                          /* creation flags                  */
-      szTitle,                            /* client-window class name        */
-      szTitle,                            /* address of title-bar text       */
+      (PCSZ) szTitle,                            /* client-window class name        */
+      (PCSZ) szTitle,                            /* address of title-bar text       */
       WS_VISIBLE,                         /* client-window style             */
       0,                                  /* handle of the resource module   */
       IDR_MAIN,                           /* frame-window identifier         */
@@ -569,17 +569,17 @@ VOID Load(PLOADINFO pli)
 
    strcpy(swctl.szSwtitle, szTitle);
    strcat(swctl.szSwtitle, " - ");
-   strcpy(szWindowText, swctl.szSwtitle);            /* save duplicate part */
-   pFilename = strrchr(pli->szFileName, '\\');         /* contain pathname? */
+   strcpy( (char * restrict) szWindowText, swctl.szSwtitle);            /* save duplicate part */
+   pFilename = (PUCHAR)strrchr(pli->szFileName, '\\');         /* contain pathname? */
 
    if (pFilename == NULL)
-      pFilename = pli->szFileName;         /* filename doesn't contain path */
+      pFilename = (PUCHAR) pli->szFileName;         /* filename doesn't contain path */
    else
       ++pFilename;                            /* point past last back-slash */
-   strcat( swctl.szSwtitle, pFilename);
+   strcat( swctl.szSwtitle, (const char * restrict) pFilename);
    WinChangeSwitchEntry( hsw, &swctl);
 
-   strcat(szWindowText, pli->szFileName);    /* use full filename in window */
+   strcat((char * restrict) szWindowText, pli->szFileName);    /* use full filename in window */
    WinSetWindowText( hwndFrame, szWindowText);
    ResetScrollBars();
 
@@ -792,7 +792,7 @@ VOID NewThread(VOID)
             if(   (fsKeyFlags & KC_CHAR)
                && ((usChar == 'b') || (usChar == 'B')))
             {
-              if( psl = Correlate( &ptlMouse))
+              if( (psl = Correlate( &ptlMouse)))
               {
                 ToBottom( psl);
                 Redraw();
@@ -1623,9 +1623,9 @@ VOID Zoom( VOID )
 BOOL SegListCheck(INT iLoc)
 {
   PSEGLIST   psl;
-  CHAR       szMsg[50];
+  // CHAR       szMsg[50];
 
-  szMsg[0] = '\0';
+  //szMsg[0] = '\0';
   for( psl = pslHead; psl != NULL; psl = psl->pslNext)
     if( (psl->lSegId < 1) || (psl->lSegId > lLastSegId) )
     {
@@ -1865,13 +1865,13 @@ BOOL CreatePicture(SHORT sUpdate)
               aptlControl[10].x += alFuzz[lLastSegId - 1][3];
       }
 
-      if( lNeighbor = sl.lAdjacent[4])
+      if( (lNeighbor = sl.lAdjacent[4]))
       {
         aptlControl[7].y  -= alFuzz[lNeighbor - 1][0];
               aptlControl[6].y  += alFuzz[lNeighbor - 1][1];
       }
 
-      if( lNeighbor = sl.lAdjacent[6])
+      if( (lNeighbor = sl.lAdjacent[6]))
       {
               aptlControl[4].x  -= alFuzz[lNeighbor - 1][2];
               aptlControl[3].x  += alFuzz[lNeighbor - 1][3];
@@ -1939,7 +1939,7 @@ BOOL CreatePicture(SHORT sUpdate)
 
               if ((sl.hdcHole = DevOpenDC( habMain
                               , OD_MEMORY
-                              , "*"
+                              , (PCSZ) "*"
                               , 3L
                               , (PDEVOPENDATA)&dop
                               , NULLHANDLE)) == DEV_ERROR)
@@ -1964,7 +1964,7 @@ BOOL CreatePicture(SHORT sUpdate)
 
               if ((sl.hdcFill = DevOpenDC( habMain
                               , OD_MEMORY
-                              , "*"
+                              , (PCSZ) "*"
                               , 3L
                               , (PDEVOPENDATA)&dop
                               , NULLHANDLE)) == DEV_ERROR)
@@ -2116,55 +2116,55 @@ BOOL PrepareBitmap(VOID)
 *
 *           SINGLE BITMAP FILE FORMAT
 *
-*   �����������������������������������������Ŀ offset 0
-*   �  Bitmap File Header             (bfh2)  � pbfh2->offBits contains data Ŀ
-*   �                                         � offset (from begin of file)   �
-*   �����������������������������������������Ĵ                               �
-*   �  Bitmap Information Header      (bmp2)  �                               �
-*   �����������������������������������������Ĵ                               �
-*   �  Color Table of RGB Structures  (argb2) �                               �
-*   �����������������������������������������Ĵ <������������������������������
-*   �  Bitmap Data (scan lines)               �
-*   �             .                           �
-*   �             .                           �
-*   �             .                           �
-*   �������������������������������������������
+*   ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿ offset 0
+*   ³  Bitmap File Header             (bfh2)  ³ pbfh2->offBits contains data Ä¿
+*   ³                                         ³ offset (from begin of file)   ³
+*   ÃÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´                               ³
+*   ³  Bitmap Information Header      (bmp2)  ³                               ³
+*   ÃÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´                               ³
+*   ³  Color Table of RGB Structures  (argb2) ³                               ³
+*   ÃÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´ <ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*   ³  Bitmap Data (scan lines)               ³
+*   ³             .                           ³
+*   ³             .                           ³
+*   ³             .                           ³
+*   ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 *
 *
 *         BITMAP-ARRAY FILE FORMAT
 *
-*   �����������������������������������������Ŀ offset 0
-*   �  Bitmap Array File Header       (baf2)  �
-*   �  (only for bitmap arrays)               �
-*   �����������������������������������������Ĵ
-*   �  Bitmap File Header             (bfh2)  � pbfh2->offBits contains data Ŀ
-*   �                                         � offset (from begin of file)   �
-*   �����������������������������������������Ĵ                               �
-*   �  Bitmap Information Header      (bmp2)  �                               �
-*   �����������������������������������������Ĵ                               �
-*   �  Color Table of RGB Structures  (argb2) �                               �
-*   �����������������������������������������Ĵ                               �
-*   �     next Bitmap Array File Header       �                               �
-*   �             .                           �                               �
-*   �             .                           �                               �
-*   �             .                           �                               �
-*   �����������������������������������������Ĵ <������������������������������
-*   �  1st Bitmap Data (scan lines)           �
-*   �                                         �
-*   �                                         �
-*   �����������������������������������������Ĵ
-*   �     next Bitmap Data (scan lines)       �
-*   �             .                           �
-*   �             .                           �
-*   �             .                           �
-*   �������������������������������������������
+*   ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿ offset 0
+*   ³  Bitmap Array File Header       (baf2)  ³
+*   ³  (only for bitmap arrays)               ³
+*   ÃÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´
+*   ³  Bitmap File Header             (bfh2)  ³ pbfh2->offBits contains data Ä¿
+*   ³                                         ³ offset (from begin of file)   ³
+*   ÃÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´                               ³
+*   ³  Bitmap Information Header      (bmp2)  ³                               ³
+*   ÃÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´                               ³
+*   ³  Color Table of RGB Structures  (argb2) ³                               ³
+*   ÃÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´                               ³
+*   ³     next Bitmap Array File Header       ³                               ³
+*   ³             .                           ³                               ³
+*   ³             .                           ³                               ³
+*   ³             .                           ³                               ³
+*   ÃÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´ <ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
+*   ³  1st Bitmap Data (scan lines)           ³
+*   ³                                         ³
+*   ³                                         ³
+*   ÃÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´
+*   ³     next Bitmap Data (scan lines)       ³
+*   ³             .                           ³
+*   ³             .                           ³
+*   ³             .                           ³
+*   ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ
 *
 ******************************************************************************/
 
 BOOL ReadBitmap(HFILE hfile)
 {
    APIRET     rc;                                         /* API return code */
-   BOOL       fRet = FALSE;                         /* Function return code. */
+   // BOOL       fRet = FALSE;                         /* Function return code. */
    FILESTATUS fsts;
    PBITMAPFILEHEADER2 pbfh2;                   /* can address any file types */
    PBITMAPINFOHEADER2 pbmp2;                     /* address any info headers */
@@ -2342,7 +2342,7 @@ VOID DispErrorMsg(HAB hab, HWND hwndFrame, PCH FileName, LONG LineNum)
 {
  PERRINFO  pErrInfoBlk;
  PSZ       pszOffSet, pszErrMsg;
- ERRORID   ErrorId;
+ // ERRORID   ErrorId;
  PCH       ErrorStr;
  CHAR      szbuff[125];
 
@@ -2358,19 +2358,19 @@ VOID DispErrorMsg(HAB hab, HWND hwndFrame, PCH FileName, LONG LineNum)
    if (!hab)
    {                                     /* Non-PM Error */
       WinLoadString( habMain,0, IDS_UNKNOWNMSG, sizeof(szbuff), (PSZ)szbuff);
-      ErrorStr = malloc(strlen(szbuff)+strlen(FileName)+10);
-      sprintf(ErrorStr, szbuff, FileName, LineNum);
+      ErrorStr = malloc(strlen(szbuff)+strlen( (const char *) FileName)+10);
+      sprintf( (char * restrict) ErrorStr, szbuff, FileName, LineNum);
       WinMessageBox(HWND_DESKTOP,         /* Parent window is desk top */
                     hwndFrame,            /* Owner window is our frame */
                     (PSZ)ErrorStr,        /* PMWIN Error message       */
-                    szErrorTitle,         /* Title bar message         */
+                    (PCSZ) szErrorTitle,         /* Title bar message         */
                     MSGBOXID,             /* Message identifier        */
                     MB_MOVEABLE | MB_CUACRITICAL | MB_CANCEL ); /* Flags */
       free(ErrorStr);
       return;
    }
 
-   ErrorId = WinGetLastError(hab);
+   // ErrorId = WinGetLastError(hab);
 
    if ((pErrInfoBlk = WinGetErrorInfo(hab)) != (PERRINFO)NULL)
    {
@@ -2378,13 +2378,13 @@ VOID DispErrorMsg(HAB hab, HWND hwndFrame, PCH FileName, LONG LineNum)
       pszErrMsg = ((PSZ)pErrInfoBlk) + *((PULONG)pszOffSet);
 
       WinLoadString( habMain,0, IDS_ERRORMSG, sizeof(szbuff), (PSZ)szbuff);
-      ErrorStr = malloc(strlen(szbuff)+strlen(pszErrMsg)+strlen(FileName)+10);
-      sprintf(ErrorStr, szbuff, pszErrMsg, FileName, LineNum);
+      ErrorStr = malloc(strlen(szbuff)+strlen( (const char *) pszErrMsg)+strlen( (const char *) FileName)+10);
+      sprintf( (char * restrict) ErrorStr, szbuff, pszErrMsg, FileName, LineNum);
 
       WinMessageBox(HWND_DESKTOP,         /* Parent window is desk top */
                     hwndFrame,            /* Owner window is our frame */
                     (PSZ)ErrorStr,        /* PMWIN Error message       */
-                    szErrorTitle,         /* Title bar message         */
+                    (PCSZ) szErrorTitle,         /* Title bar message         */
                     MSGBOXID,             /* Message identifier        */
                     MB_MOVEABLE | MB_CUACRITICAL | MB_CANCEL ); /* Flags */
 

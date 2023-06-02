@@ -26,26 +26,21 @@
 *      advised of the possibility of such damages.                                                    *
 *
 ******************************************************************************/
-
 #include "jigsaw.h"
 #include "jighelp.h"
 #include "globals.h"
 #include <stdio.h>
 #include <string.h>
-
 #define PB_STAT_CANCEL 1
 #define PB_STAT_HELP   2
 #define DEFAULT_DIR    "\\OS2\\BITMAP"
-
 /******************************************************************************/
 /*                                                                                                                         */
 /*  Define forward procedure references                                                  */
 /*                                                                                                                    */
 /******************************************************************************/
-
 /* list of EA type strings */
-PSZ apszITL[]={"Jigsaw", (PSZ)NULL};
-
+PSZ apszITL[]={(unsigned char *) "Jigsaw", (PSZ)NULL};
 
 /******************************************************************************
 *
@@ -61,12 +56,10 @@ PSZ apszITL[]={"Jigsaw", (PSZ)NULL};
 *  Return      : BOOL
 *
 ******************************************************************************/
-
 BOOL SendCommand(ULONG ulCommand, MPARAM mp1, MPARAM mp2)
 {
    if (!hmqAsync)                          /* no message queue; don't bother */
       return( FALSE);
-
    switch (ulCommand)
    {
       case UM_DIE:
@@ -82,20 +75,15 @@ BOOL SendCommand(ULONG ulCommand, MPARAM mp1, MPARAM mp2)
       case UM_JUMBLE:
       case UM_LOAD:
       case UM_CHAR:
-
          return( WinPostQueueMsg( hmqAsync    /* let worker thread handle it */
                                 , ulCommand
                                 , mp1
                                 , mp2 ) );
          break;
-
       default:
          return( TRUE);
-
    }   /* end switch (ulCommand)  */
-
 }   /* end SendCommand() */
-
 /******************************************************************************
 *
 *  Name        : ClientWndProc
@@ -109,49 +97,41 @@ BOOL SendCommand(ULONG ulCommand, MPARAM mp1, MPARAM mp2)
 *
 ******************************************************************************/
 
-
 MRESULT EXPENTRY ClientWndProc(HWND hwnd,ULONG msg,MPARAM mp1,MPARAM mp2)
 {
   CHAR   szTemp[128];
   ULONG  ulSemPostCount;
-
   switch (msg)
   {
     case WM_CHAR:
-
       SendCommand( UM_CHAR, mp1, mp2);
       break;
-
     case WM_CLOSE:
       WinLoadString( habMain, 0, IDS_TERMINATE, sizeof(szTemp), (PSZ)szTemp );
       if( WinMessageBox( HWND_DESKTOP
                        , hwndFrame
-                       , szTemp
-                       , szTitle
+                       , (PCSZ) szTemp
+                       , (PCSZ) szTitle
                        , 0
                        , MB_CUAWARNING | MB_YESNO | MB_CUANOTIFICATION | MB_DEFBUTTON1)
                == MBID_YES)
           WinPostMsg( hwnd, WM_QUIT, NULL, NULL);
       break;
-
     case WM_PAINT:
       return( WndProcPaint());
       break;
-
     /**************************************************************************/
     /* Keys Help Message                                                                                                              */
     /**************************************************************************/
     case HM_QUERY_KEYS_HELP:
       return (MRESULT)PANEL_HELPKEYS;   /* return id of key help panel */
       break;
-
     /**************************************************************************/
     /*                                                                                                                */
     /**************************************************************************/
     case WM_ERASEBACKGROUND:
       return( ( MRESULT)TRUE);
       break;
-
     /**************************************************************************/
     /* Process menu item commands, and commands generated from the keyboard   */
     /* via the accelerator table. Most are handled by the async thread        */
@@ -159,7 +139,6 @@ MRESULT EXPENTRY ClientWndProc(HWND hwnd,ULONG msg,MPARAM mp1,MPARAM mp2)
     case WM_COMMAND:
       return( WndProcCommand( hwnd, msg, mp1, mp2));
       break;
-
     /**************************************************************************/
     /* Scrolling is handled by the async drawing thread. Simply pass on the   */
     /* command and parameters                                                                            */
@@ -167,11 +146,9 @@ MRESULT EXPENTRY ClientWndProc(HWND hwnd,ULONG msg,MPARAM mp1,MPARAM mp2)
     case WM_HSCROLL:
       SendCommand( UM_HSCROLL, mp2, 0);
       break;
-
     case WM_VSCROLL:
       SendCommand( UM_VSCROLL, mp2, 0);
       break;
-
     /************************************************************************/
     /* The client area is being resized.                                                         */
     /************************************************************************/
@@ -179,7 +156,6 @@ MRESULT EXPENTRY ClientWndProc(HWND hwnd,ULONG msg,MPARAM mp1,MPARAM mp2)
       DosResetEventSem( hevDrawOn, &ulSemPostCount);     /* disallow drawing */
       SendCommand( UM_SIZING, mp1, mp2);
       break;
-
     /**************************************************************************/
     /* Mouse commands are handled by the async thread. Simply send on the     */
     /* command and parameters.                                                                        */
@@ -195,7 +171,6 @@ MRESULT EXPENTRY ClientWndProc(HWND hwnd,ULONG msg,MPARAM mp1,MPARAM mp2)
       }
       return( ( MRESULT)TRUE);
       break;
-
     case WM_BUTTON2UP:
       if( !fButtonDownMain)
               return( ( MRESULT)TRUE);
@@ -205,7 +180,6 @@ MRESULT EXPENTRY ClientWndProc(HWND hwnd,ULONG msg,MPARAM mp1,MPARAM mp2)
               WinAlarm( HWND_DESKTOP, WA_WARNING);
       return( ( MRESULT)TRUE);
       break;
-
     case WM_MOUSEMOVE:
       DosQueryEventSem( hevMouse, &ulSemPostCount);
       if( ulSemPostCount)                         /* mouse tracking enabled? */
@@ -217,13 +191,9 @@ MRESULT EXPENTRY ClientWndProc(HWND hwnd,ULONG msg,MPARAM mp1,MPARAM mp2)
     /**************************************************************************/
     default:
       return( WinDefWindowProc( hwnd, msg, mp1, mp2));
-
   }   /* end switch (msg)  */
-
   return( FALSE);
-
 }   /* end ClientWndProc() */
-
 /******************************************************************************/
 /*                                                                                                                         */
 /* WM_PAINT message                                                                                            */
@@ -232,15 +202,13 @@ MRESULT EXPENTRY ClientWndProc(HWND hwnd,ULONG msg,MPARAM mp1,MPARAM mp2)
 MRESULT WndProcPaint(VOID)
 {
   HRGN   hrgnUpdt;
-  SHORT  sRgnType;
-
+  LONG  sRgnType;
   hrgnUpdt = GpiCreateRegion( hpsPaint, 0L, NULL);
-  sRgnType = WinQueryUpdateRegion( hwndClient, hrgnUpdt);
+  sRgnType = WinQueryUpdateRegion( hwndClient, hrgnUpdt); // This seems to be important when you do File - Open
   SendCommand( UM_DRAW, (MPARAM)hrgnUpdt, 0);
   WinValidateRegion( hwndClient, hrgnUpdt, FALSE);
   return( FALSE);
 }
-
 /******************************************************************************
 *
 *  Name        : WndProcCommand
@@ -254,120 +222,79 @@ MRESULT WndProcPaint(VOID)
 *  Return      : MRESULT
 *
 ******************************************************************************/
-
 MRESULT WndProcCommand(HWND hwnd, ULONG msg, MPARAM mp1, MPARAM mp2)
 {
   ULONG     ulSemPostCount;
   ULONG     ulLoadPostCount;
-
    DosQueryEventSem( hevLoadingBitmap, &ulLoadPostCount); /* drawing enabled? */
-
    switch( SHORT1FROMMP(mp1))
    {
       case IDM_SIZE_SMALL:
-
          if (ulLoadPostCount == 0)    /* is a bitmap currently being loaded? */
             break;                    /* ignore message while loading bitmap */
          CheckMenu(Currentchecked, FALSE);       /* remove check on old menu */
          SizeBitmap(-8);                            /* change transform size */
          CheckMenu(IDM_SIZE_SMALL, TRUE);               /* add check to menu */
          Currentchecked = IDM_SIZE_SMALL;               /* save cur. menu id */
-
          break;
-
       case IDM_SIZE_MEDIUM:
-
          if (ulLoadPostCount == 0)    /* is a bitmap currently being loaded? */
             break;                    /* ignore message while loading bitmap */
          CheckMenu(Currentchecked, FALSE);       /* remove check on old menu */
          SizeBitmap(-4);                            /* change transform size */
          CheckMenu(IDM_SIZE_MEDIUM, TRUE);              /* add check to menu */
          Currentchecked = IDM_SIZE_MEDIUM;              /* save cur. menu id */
-
          break;
-
       case IDM_SIZE_LARGE:
-
          if (ulLoadPostCount == 0)    /* is a bitmap currently being loaded? */
             break;                    /* ignore message while loading bitmap */
          CheckMenu(Currentchecked, FALSE);       /* remove check on old menu */
          SizeBitmap(-2);                            /* change transform size */
          CheckMenu(IDM_SIZE_LARGE, TRUE);               /* add check to menu */
          Currentchecked = IDM_SIZE_LARGE;               /* save cur. menu id */
-
          break;
-
       case IDM_SIZE_FULL:
-
          if (ulLoadPostCount == 0)    /* is a bitmap currently being loaded? */
             break;                    /* ignore message while loading bitmap */
          CheckMenu(Currentchecked, FALSE);       /* remove check on old menu */
          SizeBitmap(0);                             /* change transform size */
          CheckMenu(IDM_SIZE_FULL, TRUE);                /* add check to menu */
          Currentchecked = IDM_SIZE_FULL;                /* save cur. menu id */
-
          break;
-
       case IDM_JUMBLE:
-
          DosResetEventSem( hevDrawOn, &ulSemPostCount);  /* disallow drawing */
          SendCommand( UM_JUMBLE, 0, 0);
-
          break;
-
       case IDM_LOAD:
-
          FileOpen();           /* Open file and load/draw the selected image */
-
          break;
-
       /**********************************************************************/
       /* Pass on the rest to the async thread.                              */
       /**********************************************************************/
-
       case IDM_HELPHELPFORHELP:
-
          HelpHelpForHelp(mp2);
-
          break;
-
       case IDM_HELPEXTENDED:
-
          DisplayHelpPanel(PANEL_EXTENDED_CONTENTS);
-
          break;
-
       case IDM_HELPINDEX:
-
          HelpIndex(mp2);
-
          break;
-
       case IDM_HELPTUTORIAL:
-
          HelpTutorial(mp2);
-
          break;
-
       case IDM_HELPABOUT:
-
          HelpAbout(mp2);
-
          break;
-
 
       /**********************************************************************/
       /* Unrecognized => default                                            */
       /**********************************************************************/
-
       default:
          return( WinDefWindowProc(hwnd, msg, mp1, mp2));
    }
-
    return( FALSE);
-
 }   /* end WndProcCommand() */
-
 
 /****************************************************************\
  *  Open file routine
@@ -390,7 +317,7 @@ MRESULT WndProcCommand(HWND hwnd, ULONG msg, MPARAM mp1, MPARAM mp2)
 \****************************************************************/
 BOOL FileOpen( VOID )
 {
- BOOL        fSuccess = FALSE;
+ // BOOL        fSuccess = FALSE;
  PCH         pch;
  FILEDLG     fdg;
  CHAR        szHeader[MESSAGELEN], szButton[MESSAGELEN];
@@ -400,27 +327,23 @@ BOOL FileOpen( VOID )
  FILEFINDBUF FileBuff;     /*  used to locate default directory */
  HDIR        hdir  = HDIR_SYSTEM;
  ULONG       Count = 1;
-
    /*
     * set up structure to pass to standard file dialog
     */
  fdg.cbSize = sizeof(FILEDLG);
  fdg.fl = FDS_CENTER | FDS_HELPBUTTON | FDS_OPEN_DIALOG;
-
- if (!WinLoadString(habMain, 0, IDS_OPENDLGHEADER, MESSAGELEN, szHeader))
+ if (!WinLoadString(habMain, 0, IDS_OPENDLGHEADER, MESSAGELEN, (PSZ) szHeader))
    {
    MessageBox(hwndFrame, IDS_CANNOTLOADSTRING, MB_OK | MB_ERROR, TRUE);
    return FALSE;
    }
- fdg.pszTitle = szHeader;                            /* dialog title */
-
- if (!WinLoadString(habMain, 0, IDS_OPENDLGBUTTON, MESSAGELEN, szButton))
+ fdg.pszTitle = (PSZ) szHeader;                            /* dialog title */
+ if (!WinLoadString(habMain, 0, IDS_OPENDLGBUTTON, MESSAGELEN, (PSZ) szButton))
    {
    MessageBox(hwndFrame, IDS_CANNOTLOADSTRING, MB_OK | MB_ERROR, TRUE);
    return FALSE;
    }
- fdg.pszOKButton = szButton;                 /* <ENTER> button text */
-
+ fdg.pszOKButton = (PSZ) szButton;                 /* <ENTER> button text */
  fdg.ulUser = 0L;
  fdg.pfnDlgProc = (PFNWP)JigsawOpenFilterProc;
  fdg.lReturn = 0L;
@@ -429,49 +352,42 @@ BOOL FileOpen( VOID )
  fdg.usDlgId = 0;
  fdg.x = 0;
  fdg.y = 0;
-
     /* setup EA type list & initial type */
  fdg.pszIType = (PSZ)NULL;
  fdg.papszITypeList = (PAPSZ)apszITL;
-
     /* setup drive list & initial drive */
  fdg.pszIDrive = (PSZ)NULL;
  fdg.papszIDriveList = (PAPSZ)NULL;
-
    /*
     * get the default file extension (i.e. *.BMP)
     */
- if (!WinLoadString(habMain,  0, IDS_FILEOPENEXTENSION, FILEPROTOSIZE,
-                                                               szExtension))
+ if (!WinLoadString(habMain,  0, IDS_FILEOPENEXTENSION, FILEPROTOSIZE, (PSZ) szExtension))
    {
    MessageBox(hwndFrame, IDS_CANNOTLOADSTRING, MB_OK | MB_ERROR, TRUE);
    return FALSE;
    }
-
    /*
     * if dialog has been previously invoked, then ensure the
     * dialog is brought with the last user-selected directory
     */
  if (*pli->szFileName)
    {
-   pch = strrchr(pli->szFileName, '\\');
-   strcpy(++pch, szExtension);
+   pch = (PCH) strrchr(pli->szFileName, '\\');
+   strcpy((char *) ++pch, szExtension);
    strcpy(fdg.szFullFile, pli->szFileName);
    }
  else       /* search for \os2\bitmap directory */
    {
-   if (!DosFindFirst(DEFAULT_DIR, &hdir, FILE_DIRECTORY, &FileBuff,
+   if (!DosFindFirst((PCSZ) DEFAULT_DIR, &hdir, FILE_DIRECTORY, &FileBuff,
                               sizeof(FILEFINDBUF), &Count, FIL_STANDARD))
      sprintf(fdg.szFullFile, "%s\\%s", DEFAULT_DIR, szExtension);
    else
      strcpy(fdg.szFullFile, szExtension);
    }
 
-
  fdg.sEAType = -1;
  fdg.papszFQFilename = 0;
  fdg.ulFQFCount = 0;
-
    /*
     * invoke the standard file dialog and get a file
     */
@@ -480,7 +396,6 @@ BOOL FileOpen( VOID )
    MessageBox(hwndFrame, IDS_CANNOTRUNFILEDLG,MB_OK | MB_ERROR, TRUE);
    return FALSE;
    }
-
    /*
     *  Upon sucessful return of a file, open it for reading
     */
@@ -488,7 +403,7 @@ BOOL FileOpen( VOID )
  {
    strcpy(pli->szFileName, fdg.szFullFile);
    DosOpen(
-      pli->szFileName,       /* pointer to filename                          */
+      (PCSZ) pli->szFileName,       /* pointer to filename                          */
       &(pli->hf),            /* pointer to variable for file handle          */
       &ulDummy,              /* pointer to variable for action taken         */
       0,                     /* file size if created or truncated            */
@@ -497,24 +412,20 @@ BOOL FileOpen( VOID )
       OPEN_ACCESS_READONLY | /* open mode of file                            */
        OPEN_SHARE_DENYWRITE,
       NULL);                 /* pointer to structure for extended attributes */
-
    DosResetEventSem( hevDrawOn, &ulSemPostCount);        /* disallow drawing */
    SendCommand( UM_LOAD, (MPARAM)pli, 0);
- }
+ } 
+ return 0;
 }   /* end FileOpen() */
-
 
 VOID SizeBitmap(LONG lTempScale )
 {
    ULONG  ulSemPostCount;
-
         lScale = lTempScale;
         DosResetEventSem( hevDrawOn, &ulSemPostCount);   /* disallow drawing */
         DosPostEventSem( hevKillDraw);
         SendCommand( UM_ZOOM, MPVOID, MPVOID);
 } /* SizeBitmap */
-
-
 
 /****************************************************************\
  *  Message Box procedure
@@ -541,12 +452,10 @@ ULONG MessageBox(HWND hwndOwner, ULONG idMsg, ULONG fsStyle, BOOL fBeep)
 {
    CHAR szText[MESSAGELEN];
    PSZ  pszTitle;
-
    if (fsStyle & MB_ERROR)
       pszTitle = NULL;                                 /* default is "Error" */
    else
-      pszTitle = szTitle;                     /* use "Jigsaw" for non-errors */
-
+      pszTitle = (PSZ) szTitle;                     /* use "Jigsaw" for non-errors */
    if (!WinLoadString(habMain,
            (HMODULE)NULLHANDLE,
            idMsg,
@@ -563,19 +472,15 @@ ULONG MessageBox(HWND hwndOwner, ULONG idMsg, ULONG fsStyle, BOOL fBeep)
          return MBID_ERROR;
       }
    }
-
    if (fBeep)
       WinAlarm(HWND_DESKTOP, WA_ERROR);
-
    return WinMessageBox(HWND_DESKTOP,     /* handle of the parent window     */
              hwndOwner,                   /* handle of the owner window      */
-             szText,                      /* address of text in message box  */
+             (PCSZ) szText,               /* address of text in message box  */
              pszTitle,                    /* address of title of message box */
              MSGBOXID,                    /* message-box identifier          */
              fsStyle);                    /* type of message box             */
-
 }   /* end MessageBox() */
-
 /***************************************************************************
  *** JigsawOpenFilterProc - This is a procedure that will filter the help
  *                           messages to the open dialog.
@@ -587,8 +492,6 @@ MRESULT EXPENTRY JigsawOpenFilterProc(HWND hwnd,ULONG message,MPARAM mp1,MPARAM 
        DisplayHelpPanel(HID_FS_OPEN_DLG_HELP_PANEL);
        return FALSE ;
    }
-
    return WinDefFileDlgProc( hwnd, message, mp1, mp2 ) ;
 }
-
 /*******************************  END PROCS.C  *******************************/

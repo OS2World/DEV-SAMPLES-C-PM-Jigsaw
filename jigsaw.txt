@@ -1,0 +1,93 @@
+Name: 		JigSaw
+Descripcion: 	PM GPI Sample of JigSaw Puzzle
+Date: 		2023-06-02
+Version:	1.01
+----------------------------   
+
+DESCRIPTION
+-----------
+This program provides a jigsaw puzzle, based on a decomposition of an
+arbitrary bitmap loaded from a file.  The user can jumble the pieces,
+then drag them individually by means of the mouse.  The image can be
+zoomed in and out and scrolled up/down and left/right.
+
+JIGSAW uses GpiBitBlt with clip paths to create a collection of picture
+fragments which are the puzzle pieces.  In earlier versions of the
+program, each of these pieces was associated with a single retain-mode
+graphics segment.  The retain-mode technique, however, proved to be
+too slow, so subsequent versions of the program used retain-mode APIs
+for fewer and fewer operations.  The current version eliminates
+retain-mode graphics altogether.  Instead, the drawing data for each
+piece is stored in _SEGLIST data structure defined in JIGSAW.H.
+This structure contains all the data needed to draw a piece, including
+pointers to the previous and next pieces.  The _SEGLIST nodes are
+arranged in drawing priority order, so the picture can be reconstructed
+by traversing the list in sequence, drawing each piece as its
+corresponding structure is encountered.  Where the comments in the
+rest of the program refer to a "segment," they are simply referring to
+a piece of the puzzle as defined by a record in this data structure.
+
+To retain responsiveness to user requests, the real work is done in a
+second thread, with work requests transmitted from the main thread in
+the form of messages.  This arrangement makes it possible for the user
+to override lengthy drawing operations with a higher-priority request
+(eg. program termination, magnification change, etc.).
+
+Individual pieces are made to "move" by changing their model transforms.
+Scrolling and zooming of the whole picture is done by changing the
+default viewing transform.  The points in model space associated with
+each piece (control points for the bounding curve, corners of the
+bounding box, etc.) are converted via GpiConvert into points in device
+space prior to use with GpiBitBlt, etc.
+
+Concepts    : Illustrates the use of GPI
+              Illustrates the use of off-screen bitmaps
+ 
+
+
+REQUIREMENTS
+------------
+- yum install git gcc make libc-devel binutils watcom-wrc watcom-wlink-hll
+
+COMPILE INSTRUCTIONS
+--------------------
+This version of this sample was modified to compile on ArcaOS with GCC 9 compiler. 
+
+1) Remember to have correct header files your path. For GCC the correct ones are the included on the "libc-devel", not the ones from the OS/2 Toolkit. Check your config.sys for "SET INCLUDE=C:\usr\include"
+
+2) Since I'm using the Watcom Resource Compiler (open source) instead of the classic rc.exe, and the the Watcom Linker, intead of the classic ilink.exe, add to your config.sys...
+ SET EMXOMFLD_LINKER=wl.exe
+ SET EMXOMFLD_TYPE=WLINK
+ SET EMXOMFLD_RC_TYPE=WRC
+ SET EMXOMFLD_RC=wrc.exe
+
+3) Run "make" or "make 2>&1 |tee make.out" to get the log file.
+
+
+TOOLS USED
+----------
+- ArcaOS	- Verion 5.0.7
+- wrc 		- Version 2.0beta1
+- gcc		- gcc (GCC) 9.2.0 20190812 (OS/2 RPM build 9.2.0-5.oc00)
+- make 		- Version 3.81 k2 (2017-11-10)
+
+TROUBLESHOOT
+------------
+The compile produce will run by just executing make on the directory, but a compile.cmd file is includes to store the log in a file. If you want to save the log file you can run it as "nmake 2>&1 |tee make.out". The log will be saved into the "make.out" file.
+
+HISTORY
+---------- 
+- 1.01 - 2023-04-27
+Changed version to compile on gcc and to run on ArcaOS 5.0.7.
+
+- 1.0
+Original version by IBM
+
+LICENSE
+-------
+The 3-Clause BSD License.
+
+AUTHORS
+-------
+- Martin Iturbide (2023)
+- IBM
